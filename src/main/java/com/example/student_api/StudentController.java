@@ -1,21 +1,20 @@
 package com.example.student_api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
+// annotations i.e @ act as a sticky note in java
+// they give the normal classes in java a superpower - you don't have to write 1000 of lines of code to set up the code
 @RestController
 public class StudentController {
 
-    private final HashMap<Integer,Student> students;
+    @Autowired
+    private StudentService studentService;
 
-    public StudentController(){
-        this.students = new HashMap<>();
-        students.put(1,new Student("abhinav",21,"Computer Science"));
-        students.put(2,new Student("anjali",19,"Mathematics"));
-        students.put(3,new Student("rahul",22,"Psycology"));
-    }
-
+    // all these get, post, put, delete are annotation routing
+    // i.r telling the SpringBoot what to do when a specific web browser or the postman hits a specific url
     @GetMapping("/")
     public String homePage(){
         return "Hello! welcome to my API.. try visiting /hello";
@@ -28,62 +27,42 @@ public class StudentController {
 
     @GetMapping("/students")
     public HashMap<Integer,Student> getStudents(){
-        return students;
+        return studentService.getAllStudents();
     }
-
-//    @GetMapping("/students/{id}")
-//    public String getStudentById(@PathVariable Integer id){
-//        return students.getOrDefault(id,"Error! student NOT found 😫");
-//    // the error here was that by "get" this function returns "integer type" and by
-//    // "default" the method returns "String type" so we need method type "Object"            which allows you to return multiple types in a single function
-//    }
 
     @GetMapping("/students/{id}")
     public Object getStudentById(@PathVariable Integer id){
-        if(students.containsKey(id)){
-            return students.get(id);
-        }
-        else{
-            return "Error! student NOT found 😫";
-        }
+        return studentService.getStudentById(id);
     }
 
-//    @PostMapping("/students")
-//    public String addStudent(@RequestBody String newStudentName){
-//        int newId = students.size()+1;
-//
-//        students.put(newId,newStudentName);
-//        return "Success! added "+newStudentName+" to the database with ID: "+newId;
-//    }
 
     @PostMapping("/students/advanced")
     public String addStudent(@RequestBody Student newStudent){
-        int newId = students.size()+1;
-
-        students.put(newId,newStudent);
-        return "New student named: "+newStudent.getName()+" who is persuing course: "+newStudent.getCourse();
+        return studentService.addStudent(newStudent);
     }
 
     @DeleteMapping("/students/{id}")
     public String deleteStudent(@PathVariable Integer id){
-        if(students.containsKey(id)){
-            String removeName = students.get(id).getName();
-            students.remove(id);
-            return "Delete! successfully "+removeName+" from the database 😁";
-        }
-        else{
-            return "Can't delete student with ID: "+id+" doesn't exist 😭";
-        }
+        return studentService.deleteStudent(id);
     }
 
     @PutMapping("/students/{id}")
     public String updateStudent(@PathVariable Integer id, @RequestBody Student updateStudent){
-        if(students.containsKey(id)){
-            students.put(id, updateStudent);
-            return "Updated student: "+id+" with the student: "+updateStudent.getName();
-        }
-        else{
-            return "Can not update. The student with id: "+id+" does not exist! 😕";
-        }
+       return studentService.updateStudent(id,updateStudent);
     }
 }
+
+// @RestController (The Front Desk / The Waiter)
+//You put this on top of your StudentController class.
+//
+//What it does: It tells Spring Boot, "This class is the front desk of my API. It is allowed to speak to the internet."
+//
+//The hidden superpower: Because it has the word Rest in it, it automatically takes whatever your Java methods return (like your HashMap of students) and translates it into JSON format before sending it back to the web browser. Without this, the browser wouldn't understand your Java objects.
+
+
+// @Autowired (The Invisible Wiring)
+//This is arguably the most powerful feature in Spring Boot (conceptually known as Dependency Injection). You used this inside your Controller to bring in the Service.
+//
+//What it does: Instead of you having to manually write StudentService myService = new StudentService(); to create an object, @Autowired tells Spring Boot: "Hey, I need a StudentService right here. Please go find the one you already created and plug it in for me."
+//
+//Why it's amazing: It connects your Waiter to your Kitchen automatically. If your Kitchen eventually requires a Database, Spring will automatically wire that up too. It handles the lifecycle of all your objects so you don't have to worry about creating or destroying them.
