@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 // annotations i.e @ act as a sticky note in java
 // they give the normal classes in java a superpower - you don't have to write 1000 of lines of code to set up the code
@@ -26,7 +27,7 @@ public class StudentController {
     }
 
     @GetMapping("/students")
-    public HashMap<Integer,Student> getStudents(){
+    public List<Student> getStudents(){
         return studentService.getAllStudents();
     }
 

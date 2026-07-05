@@ -1,54 +1,65 @@
 package com.example.student_api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
-    private final HashMap<Integer,Student> students;
+    // 1. The Magic Connection: Wire in new database repository
+    @Autowired
+    private StudentRepository repository;
 
-    public HashMap<Integer,Student> getAllStudents(){
-        return students;
-    }
-
-    public StudentService(){
-        this.students = new HashMap<>();
-        students.put(1, new Student("John",21,"Computer Science"));
-        students.put(2, new Student("Anny",24,"Artificial Intelligence"));
-        students.put(3, new Student("Harry",20,"Iot"));
+    // this Student is the Student class object that we have created
+    public List<Student> getAllStudents(){
+        // findAll() automatically generates: SELECT * FROM student;
+        return repository.findAll();
     }
 
     public Object getStudentById(Integer id){
-        if(students.containsKey(id)){
-            return students.get(id);
+        // findById() returns an Optional<Student> (a box that might be empty).
+        Optional<Student> student = repository.findById(id);
+        if(student.isPresent()){
+            return student.get(); // Open the box and get the student
         }
         else{
-            return "the student with id: "+id+" does not exists!! 😁";
+            return "Error! student NOT found 😡";
         }
     }
 
     public String addStudent(Student newStudent){
-        int newId = students.size()+1;
-        students.put(newId, newStudent);
-        return "The student: "+newStudent.getName()+" is added to id: "+newId+" 😍";
+        // save() automatically generates: INSERT INTO student...
+        repository.save(newStudent);
+        return "New student named: " + newStudent.getName() + " saved to the database!";
     }
 
     public String deleteStudent(Integer id){
-        if(students.containsKey(id)){
-            String remName = students.get(id).getName();
-            students.remove(id);
-            return "Student with id: "+id+" and name: "+remName+" id removed!! 😭";
-        }
-        else{
-            return "student with id: "+id+" does not exists!! 😏";
+//        Optional<Student> student = repository.findById(id);
+//        if(student.isPresent()){
+//            Student newStudent = student.get();
+//            repository.deleteById(id);
+//            return "Student: "+newStudent.getName()+" is deleted";
+//        }
+//        else{
+//            return "student with id: "+id+" does not exists!! 😏";
+//        }
+
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return "Deleted successfully from the database 🥳";
+        } else {
+            return "Can not delete student with ID: " + id + " because he/she doesn't exist 😭";
         }
     }
 
     public String updateStudent(Integer id, Student updateDetails){
-        if(students.containsKey(id)){
-            students.put(id,updateDetails);
-            return "The details of Student with id: "+id+" and name: "+updateDetails.getName()+" are updated!! 😉";
+        if(repository.existsById(id)){
+            updateDetails.setId(id);
+            repository.save(updateDetails);
+            return "Updated student: " + id + " with the student: " + updateDetails.getName();
         }
         else{
             return "Can not update id: "+id+" No such student exists in our record!!🫩";
