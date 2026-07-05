@@ -51,6 +51,11 @@ public class StudentController {
     public String updateStudent(@PathVariable Integer id, @RequestBody Student updateStudent){
        return studentService.updateStudent(id,updateStudent);
     }
+
+    @PatchMapping("/students/{id}")
+    public String patchStudent(@PathVariable Integer id, @RequestBody Student updates){
+        return studentService.patchStudent(id,updates);
+    }
 }
 
 // @RestController (The Front Desk / The Waiter)

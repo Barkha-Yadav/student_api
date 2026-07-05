@@ -65,6 +65,27 @@ public class StudentService {
             return "Can not update id: "+id+" No such student exists in our record!!🫩";
         }
     }
+
+    public String patchStudent(Integer id, Student updates){
+        Optional<Student> optionalStudent = repository.findById(id);
+        if(optionalStudent.isPresent()){
+            Student existingStudent = optionalStudent.get();
+            if(updates.getName() != null){
+                existingStudent.setName(updates.getName());
+            }
+            if(updates.getAge() != null){
+                existingStudent.setAge(updates.getAge());
+            }
+            if(updates.getCourse() != null){
+                existingStudent.setCourse(updates.getCourse());
+            }
+            repository.save(existingStudent);
+            return "Successfully patched student ID: "+id;
+        }
+        else{
+            return "Can not patch! Student with ID: "+id+" Not Found!!🫩";
+        }
+    }
 }
 
 // @Service (The Kitchen / The Brains)

@@ -14,7 +14,7 @@ public class Student {
     private Integer id;
 
     private String name;
-    private int age;
+    private Integer age;
     private String course;
 
     // default constructor required by the JPA
@@ -22,7 +22,7 @@ public class Student {
     public Student(){}
 
     // constructor without ID - since database creates the ID for us automatically
-    public Student(String name, int age, String course){
+    public Student(String name, Integer age, String course){
         this.name = name;
         this.age = age;
         this.course = course;
@@ -45,11 +45,11 @@ public class Student {
         this.name = name;
     }
 
-    public int getAge(){
+    public Integer getAge(){
         return age;
     }
 
-    public void setAge(int age){
+    public void setAge(Integer age){
         this.age = age;
     }
 
