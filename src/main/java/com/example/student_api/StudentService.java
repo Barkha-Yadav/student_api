@@ -79,12 +79,19 @@ public class StudentService {
             if(updates.getCourse() != null){
                 existingStudent.setCourse(updates.getCourse());
             }
+            if(updates.getEmail() != null){
+                existingStudent.setEmail(updates.getEmail());
+            }
             repository.save(existingStudent);
             return "Successfully patched student ID: "+id;
         }
         else{
             return "Can not patch! Student with ID: "+id+" Not Found!!🫩";
         }
+    }
+
+    public Student getStudentByEmail(String email){
+        return repository.findByEmail(email).orElse(null);
     }
 }
 

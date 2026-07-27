@@ -1,6 +1,7 @@
 package com.example.student_api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -34,6 +35,20 @@ public class StudentController {
     @GetMapping("/students/{id}")
     public Object getStudentById(@PathVariable Integer id){
         return studentService.getStudentById(id);
+    }
+
+    @GetMapping("/students/email/{email}")
+    public ResponseEntity<Student> getByEmail(@PathVariable String email){
+        Student foundStudent = studentService.getStudentByEmail(email);
+
+        if(foundStudent != null){
+            // returns the student data with a 200 OK status
+            return ResponseEntity.ok(foundStudent);
+        }
+        else{
+            // returns absolutely nothing, but sends a 404 not Found status
+            return ResponseEntity.notFound().build();
+        }
     }
 
 
