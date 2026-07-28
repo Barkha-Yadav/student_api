@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.*;
 
 // Tells Hibernate: "Make the database table out of this class"
 @Entity
@@ -13,9 +14,19 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // tells postgres: autoincrement this ID for me
     private Integer id;
 
+    @NotBlank(message = "Name cannot be empty")
     private String name;
+
+//    @Min(value = 1, message = "Age must be greater than 0")
+    @Positive(message = "Age must be greater than 0")
     private Integer age;
+
+    @NotBlank(message = "Course name is required")
+    @Size(min = 2, max = 50, message = "Course name must be between 2 and 50 characters")
     private String course;
+
+    @NotBlank(message = "Email can't be empty")
+    @Email(message = "Please provide a valid email address")
     private String email;
 
     // default constructor required by the JPA

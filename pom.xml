@@ -53,6 +53,14 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!--Spring Boot doesn't include validation out of the box to keep the framework
+		lightweight. We need to add the official validation library.-->
+		<!--Adding Validation Starter -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

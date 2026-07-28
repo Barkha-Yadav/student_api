@@ -1,5 +1,6 @@
 package com.example.student_api;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,10 +52,10 @@ public class StudentController {
         }
     }
 
-
-    @PostMapping("/students/advanced")
-    public String addStudent(@RequestBody Student newStudent){
-        return studentService.addStudent(newStudent);
+    @PostMapping("/students/enterNew")
+    public ResponseEntity<String> addStudent(@Valid @RequestBody Student newStudent){
+        studentService.addStudent(newStudent);
+        return ResponseEntity.ok("Student saved successfully");
     }
 
     @DeleteMapping("/students/{id}")
